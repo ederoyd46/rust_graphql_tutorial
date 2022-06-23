@@ -13,7 +13,7 @@ mod schema;
 use crate::schema::{create_schema, Schema};
 
 /// GraphQL endpoint
-#[route("/graphql", method = "GET", method = "POST")]
+#[route("/", method = "GET", method = "POST")]
 async fn graphql(st: web::Data<Schema>, data: web::Json<GraphQLRequest>) -> impl Responder {
     let response_data = data.execute(&st, &()).await;
     HttpResponse::Ok().json(response_data)

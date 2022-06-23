@@ -24,7 +24,7 @@ actix-cors = "0.6"
 
 [[bin]]
 name = "local_graph"
-path = "src/main.rs"
+path = "src/local_graph.rs"
 
 
 [[bin]]

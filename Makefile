@@ -17,6 +17,9 @@ CROSS_COMPILE=x86_64-linux-musl-
 build: 
 	@cargo build 
 
+run_local_graph: 
+	@cargo run --bin local_graph
+	
 test:
 	@cargo test
 
@@ -32,7 +35,6 @@ deploy:
 
 remove:
 	@$(TERRAFORM) destroy -auto-approve
-
 
 release:
 ifeq ("$(UNAME_S)","Linux")
