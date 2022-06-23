@@ -1,27 +1,24 @@
 use actix_web::web::Buf;
-use juniper::http::{GraphQLRequest, GraphQLResponse};
+use juniper::http::GraphQLRequest;
 use lambda_http::{service_fn, Request};
-use lambda_runtime::{Error, LambdaEvent};
+use lambda_runtime::Error;
+use serde_json::Value;
 use std::sync::Arc;
-
 mod schema;
-use crate::schema::create_schema;
+use crate::schema::{create_schema, Schema};
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<(), Error> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+    let schema = Arc::new(create_schema());
     log::info!("Startup");
-    lambda_http::run(service_fn(lambda_handler)).await?;
-    log::info!("Started");
+    lambda_http::run(service_fn(|event| lambda_handler(event, schema.clone()))).await?;
+    log::info!("Shutting down");
     Ok(())
 }
 
-async fn lambda_handler(event: Request) -> Result<String, Error> {
-    let body = event.body();
-    log::info!("payload {:?}", body);
-    let schema = Arc::new(create_schema());
-    let data: GraphQLRequest = serde_json::from_reader(body.reader())?;
+async fn lambda_handler(event: Request, schema: Arc<Schema>) -> Result<Value, Error> {
+    let data: GraphQLRequest = serde_json::from_reader(event.body().reader())?;
     let response_data = data.execute(&schema, &()).await;
-    log::info!("response data {:?}", &response_data);
-    Ok(serde_json::to_string(&response_data).unwrap())
+    Ok(serde_json::to_value(&response_data).unwrap())
 }
