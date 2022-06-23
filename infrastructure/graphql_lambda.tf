@@ -1,7 +1,7 @@
 # Retrieve Lambda
 module "graphql" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "3.1.0"
+  version = "3.3.1"
 
   function_name                     = "graphql-${terraform.workspace}"
   description                       = "Graphql"
@@ -21,7 +21,7 @@ resource "aws_lambda_function_url" "graphql" {
   cors {
     allow_credentials = true
     allow_origins     = ["*"]
-    allow_methods     = ["GET"]
+    allow_methods     = ["GET", "POST"]
     allow_headers     = ["date", "keep-alive"]
     expose_headers    = ["keep-alive", "date"]
     max_age           = 86400
