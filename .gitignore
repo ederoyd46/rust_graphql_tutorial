@@ -1,0 +1,7 @@
+target
+.DS_Store
+.terraform
+*.zip
+*.tfstate*
+deploy
+.terraform.lock.hcl
