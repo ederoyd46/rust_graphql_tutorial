@@ -12,7 +12,10 @@ async fn main() -> Result<(), Error> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
     let schema = Arc::new(create_schema());
     log::info!("Startup");
-    lambda_http::run(service_fn(|event| lambda_handler(event, schema.clone()))).await?;
+    lambda_http::run(service_fn(move |event| {
+        lambda_handler(event, schema.clone())
+    }))
+    .await?;
     log::info!("Shutting down");
     Ok(())
 }
