@@ -5,3 +5,4 @@ target
 *.tfstate*
 deploy
 .terraform.lock.hcl
+.vscode/*.log
